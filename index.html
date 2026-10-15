@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lời chúc Giáng sinh 🎄</title>
+<style>
+:root{--bg1:#0b2a1f;--bg2:#143d2c;--red:#c0392b;--gold:#f4c95d;--cream:#fff8ec;--ink:#2b1a14;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{font-family:Georgia,'Times New Roman',serif;background:radial-gradient(ellipse at top,var(--bg2),var(--bg1));color:var(--cream);overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center}
+.snow{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+.snow i{position:absolute;top:-10px;color:#fff;opacity:.8;animation:fall linear infinite;font-style:normal}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
+.screen{position:relative;z-index:2;width:min(92vw,420px);padding:24px;display:none;flex-direction:column;align-items:center;gap:18px}
+.screen.on{display:flex;animation:fade .7s ease}
+@keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.tree{font-size:84px;animation:glow 2s ease-in-out infinite}
+@keyframes glow{50%{filter:drop-shadow(0 0 18px var(--gold));transform:scale(1.06)}}
+h1{margin:0;font-size:28px;color:var(--gold);letter-spacing:.5px}
+p{margin:0;opacity:.9;line-height:1.5}
+.bar{width:100%;height:8px;border-radius:99px;background:#ffffff22;overflow:hidden}
+.bar b{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--red),var(--gold));transition:width .15s linear}
+.gift{font-size:96px;cursor:pointer;border:0;background:none;animation:shake 1.6s infinite}
+@keyframes shake{0%,70%,100%{transform:rotate(0)}75%{transform:rotate(-10deg)}85%{transform:rotate(10deg)}95%{transform:rotate(-6deg)}}
+.hint{font-size:14px;opacity:.75}
+.card{background:var(--cream);color:var(--ink);border:3px solid var(--gold);border-radius:18px;padding:30px 24px;box-shadow:0 12px 40px #0008;position:relative}
+.card:before{content:"❄";position:absolute;top:-18px;left:50%;transform:translateX(-50%);background:var(--red);color:#fff;width:34px;height:34px;border-radius:50%;line-height:34px;font-size:18px}
+.card q{font-size:21px;line-height:1.55;quotes:none;font-style:italic;display:block}
+.sign{color:var(--red);font-weight:bold;margin-top:14px;display:block}
+.btn{background:var(--red);color:#fff;border:0;border-radius:99px;padding:12px 26px;font-size:16px;font-family:inherit;cursor:pointer}
+.btn:active{transform:scale(.96)}
+</style>
+</head>
+<body>
+<div class="snow" id="snow"></div>
+
+<section class="screen on" id="wait">
+  <div class="tree">🎄</div>
+  <h1>Đang chuẩn bị món quà…</h1>
+  <p>Ông già Noel đang gói lời chúc dành riêng cho bạn</p>
+  <div class="bar"><b id="fill"></b></div>
+</section>
+
+<section class="screen" id="gift">
+  <button class="gift" id="open" aria-label="Mở quà">🎁</button>
+  <h1>Có một món quà dành cho bạn!</h1>
+  <p class="hint">Chạm vào hộp quà để mở</p>
+</section>
+
+<section class="screen" id="msg">
+  <div class="card"><q id="text"></q><span class="sign">🎅 Merry Christmas! 🎅</span></div>
+  <button class="btn" id="again">🎁 Mở lời chúc khác</button>
+</section>
+
+<script>
+const wishes=[
+"Chúc bạn một mùa Giáng sinh ấm áp, bình yên bên những người thương yêu nhất.",
+"Mong mọi điều tốt đẹp sẽ đến với bạn như những bông tuyết rơi nhẹ đêm Noel.",
+"Giáng sinh này, chúc bạn có thật nhiều nụ cười và ít muộn phiền.",
+"Chúc bạn luôn được bao quanh bởi tình yêu thương như ánh đèn lung linh trên cây thông.",
+"Mong rằng mọi ước mơ của bạn sẽ thành hiện thực trong mùa Noel diệu kỳ này.",
+"Chúc bạn một đêm Noel tràn ngập tiếng cười, hơi ấm và niềm vui.",
+"Món quà quý giá nhất không nằm dưới gốc cây thông, mà là những người ở bên cạnh bạn.",
+"Chúc bạn sức khỏe dồi dào, bình an và hạnh phúc suốt năm mới.",
+"Mong ông già Noel mang đến cho bạn thật nhiều may mắn và bất ngờ thú vị.",
+"Giáng sinh là lúc nhắc ta biết ơn những điều giản dị mình đang có. Chúc bạn an yên.",
+"Chúc trái tim bạn luôn rực sáng như ngôi sao trên đỉnh cây thông Noel.",
+"Dù bên nhau hay xa cách, mong tình thân vẫn luôn ấm áp trong đêm Giáng sinh này.",
+"Chúc bạn một mùa lễ hội ngọt ngào như chiếc bánh quy gừng vừa ra lò.",
+"Mong năm mới sẽ mang đến cho bạn nhiều cơ hội, nhiều niềm vui và nhiều bình yên.",
+"Hãy để tiếng chuông Giáng sinh mang đến cho bạn những điều tuyệt vời nhất.",
+"Chúc bạn luôn mạnh mẽ, dịu dàng và hạnh phúc theo cách riêng của mình.",
+"Noel này, chúc bạn tìm thấy niềm vui trong từng khoảnh khắc nhỏ bé.",
+"Chúc gia đình bạn quây quần, đủ đầy và tràn ngập tiếng cười.",
+"Mong bạn luôn có một nơi để trở về và một người để yêu thương.",
+"Chúc bạn một Giáng sinh lấp lánh như những ánh đèn đêm đông.",
+"Cảm ơn bạn đã là một phần tuyệt vời trong năm nay. Chúc bạn Giáng sinh vui vẻ!",
+"Chúc những lo âu tan đi như tuyết gặp nắng, chỉ còn lại niềm vui ở lại.",
+"Mong bạn đón một mùa Noel không vội vã, chỉ có yêu thương và những nụ cười.",
+"Giáng sinh về rồi, chúc bạn thêm một chương mới thật đẹp trong cuốn sách cuộc đời.",
+"Chúc bạn luôn tin vào điều kỳ diệu, vì phép màu vẫn luôn tồn tại quanh ta.",
+"Mong từng ngày của bạn đều ấm áp như tách cacao nóng giữa mùa đông.",
+"Chúc bạn một đêm Noel an lành, giấc ngủ ngon và những giấc mơ ngọt ngào.",
+"Hãy yêu thương nhiều hơn, tha thứ nhiều hơn, và cười thật nhiều. Giáng sinh vui vẻ!",
+"Chúc bạn nhận được thật nhiều món quà, nhưng quý nhất vẫn là sự quan tâm của người thương.",
+"Mong năm mới của bạn sáng như ánh nến và ấm như vòng tay người thân.",
+"Chúc bạn bình tĩnh trước sóng gió, vững vàng trên mọi hành trình.",
+"Giáng sinh này, hãy tự thưởng cho mình một cái ôm, bạn đã cố gắng rất nhiều rồi.",
+"Chúc bạn luôn là người được yêu thương và cũng là người biết yêu thương.",
+"Mong mọi con đường bạn đi đều rải đầy hoa và ánh sáng.",
+"Chúc công việc thuận lợi, tiền vào như nước, niềm vui nhân đôi trong năm mới.",
+"Chúc bạn một mùa Noel rộn ràng, đầy ắp tiếng hát và những điều bất ngờ.",
+"Mong bạn luôn giữ được trái tim trong trẻo như một đứa trẻ đang chờ quà Noel.",
+"Chúc tình bạn của chúng ta bền lâu như ánh đèn trên cây thông không bao giờ tắt.",
+"Chúc bạn có một Giáng sinh thật chill, thật ấm và thật nhiều bánh kẹo.",
+"Mong bạn luôn được là chính mình và vẫn được yêu thương trọn vẹn.",
+"Chúc cho mọi nỗ lực của bạn sẽ được đền đáp xứng đáng vào năm tới.",
+"Giữa nhịp sống vội vã, chúc bạn tìm được những phút giây dịu êm của Giáng sinh.",
+"Chúc bạn luôn có đủ can đảm để bắt đầu và đủ kiên nhẫn để hoàn thành.",
+"Mong đêm Noel này mang đến cho bạn một niềm vui nhỏ nhưng đọng lại thật lâu.",
+"Chúc bạn một mùa đông không lạnh, vì có nhiều người thương bên cạnh.",
+"Hy vọng năm mới sẽ nhẹ nhàng với bạn hơn, và bạn cũng nhẹ nhàng với chính mình.",
+"Chúc bạn mỗi sáng thức dậy đều có một lý do để mỉm cười.",
+"Mong bạn gặp được nhiều người tử tế và những điều đẹp đẽ trên đường đời.",
+"Chúc bạn Giáng sinh an lành, năm mới vạn sự như ý, bình an và rạng rỡ!",
+"Cầu mong ánh sáng của đêm Giáng sinh soi đường cho bạn suốt cả năm mới.",
+"Noel đến rồi! Chúc bạn một mùa lễ thật vui, thật ấm và thật nhiều yêu thương. 🎄"
+];
+
+// snow
+const snow=document.getElementById('snow');
+for(let i=0;i<35;i++){const s=document.createElement('i');s.textContent=Math.random()>.5?'❄':'•';
+s.style.left=Math.random()*100+'%';s.style.fontSize=(8+Math.random()*16)+'px';
+s.style.animationDuration=(6+Math.random()*9)+'s';s.style.animationDelay=(-Math.random()*12)+'s';snow.appendChild(s);}
+
+const $=id=>document.getElementById(id);
+function show(id){document.querySelectorAll('.screen').forEach(e=>e.classList.remove('on'));$(id).classList.add('on');}
+
+// chọn câu ngẫu nhiên, tránh lặp lại câu vừa xem gần đây (lưu trong trình duyệt nếu có)
+function pick(){
+  let seen=[];try{seen=JSON.parse(localStorage.getItem('seen')||'[]')}catch(e){}
+  if(seen.length>=wishes.length-1)seen=[];
+  let i;do{i=Math.floor(Math.random()*wishes.length)}while(seen.includes(i));
+  seen.push(i);try{localStorage.setItem('seen',JSON.stringify(seen))}catch(e){}
+  return wishes[i];
+}
+
+// màn hình chờ
+let p=0;const t=setInterval(()=>{p+=Math.random()*9+3;if(p>=100){p=100;clearInterval(t);setTimeout(()=>show('gift'),400)}$('fill').style.width=p+'%'},180);
+
+function reveal(){$('text').textContent=pick();show('msg')}
+$('open').onclick=reveal;
+$('again').onclick=()=>show('gift');
+</script>
+</body>
+</html>
